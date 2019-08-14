@@ -18,11 +18,11 @@ matrix:
       # Exclude the default Python 3.5 build
       - python: 3.5
   include:
-    - name: "3.6 macOS"
+    - name: "3.7 macOS"
       os: osx
       language: generic
       env:
-        - MB_PYTHON_VERSION=3.6
+        - MB_PYTHON_VERSION=3.7
 
 before_install:
     - source multibuild/common_utils.sh
