@@ -31,3 +31,4 @@ before_install:
 script:
     - pip install py2app Pillow
     - cd pillow_mac_setup && python setup.py py2app
+    - ./dist/main.app/Contents/MacOS/main
