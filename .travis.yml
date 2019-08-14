@@ -4,7 +4,6 @@ env:
       - BUILD_COMMIT=HEAD
       - PLAT=x86_64
       - UNICODE_WIDTH=32
-      - MACOSX_DEPLOYMENT_TARGET=10.10
 
 language: python
 # Default Python version is usually 2.7
