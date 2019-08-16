@@ -43,29 +43,5 @@ function pre_build {
     fi
 }
 
-function run_tests_in_repo {
-    # Run Pillow tests from within source repo
-    pytest
-}
-
 EXP_CODECS="jpg jpg_2000 libtiff zlib"
 EXP_MODULES="freetype2 littlecms2 pil tkinter webp"
-
-function run_tests {
-    # Runs tests on installed distribution from an empty directory
-    (cd ../Pillow && run_tests_in_repo)
-    # Show supported codecs and modules
-    local codecs=$(python -c 'from PIL.features import *; print(" ".join(sorted(get_supported_codecs())))')
-    # Test against expected codecs and modules
-    local ret=0
-    if [ "$codecs" != "$EXP_CODECS" ]; then
-        echo "Codecs should be: '$EXP_CODECS'; but are '$codecs'"
-        ret=1
-    fi
-    local modules=$(python -c 'from PIL.features import *; print(" ".join(sorted(get_supported_modules())))')
-    if [ "$modules" != "$EXP_MODULES" ]; then
-        echo "Modules should be: '$EXP_MODULES'; but are '$modules'"
-        ret=1
-    fi
-    return $ret
-}
