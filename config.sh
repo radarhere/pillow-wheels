@@ -43,59 +43,5 @@ function pre_build {
     fi
 }
 
-function run_tests_in_repo {
-    # Run Pillow tests from within source repo
-    pytest
-}
-
 EXP_CODECS="jpg jpg_2000 libtiff zlib"
 EXP_MODULES="freetype2 littlecms2 pil tkinter webp"
-
-function run_tests {
-    # Runs tests on installed distribution from an empty directory
-    (cd ../Pillow && run_tests_in_repo)
-    # Show supported codecs and modules
-    local codecs=$(python -c 'from PIL.features import *; print(" ".join(sorted(get_supported_codecs())))')
-    # Test against expected codecs and modules
-    local ret=0
-    if [ "$codecs" != "$EXP_CODECS" ]; then
-        echo "Codecs should be: '$EXP_CODECS'; but are '$codecs'"
-        ret=1
-    fi
-    local modules=$(python -c 'from PIL.features import *; print(" ".join(sorted(get_supported_modules())))')
-    if [ "$modules" != "$EXP_MODULES" ]; then
-        echo "Modules should be: '$EXP_MODULES'; but are '$modules'"
-        ret=1
-    fi
-    return $ret
-}
-
-# Custom functions to temporarily pin wheel to 0.31.1
-if [ -n "$IS_OSX" ]; then
-	function before_install {
-		brew cask uninstall oclint || true
-		export CC=clang
-		export CXX=clang++
-		get_macpython_environment $MB_PYTHON_VERSION venv
-		source venv/bin/activate
-		pip install --upgrade pip
-		pip install wheel==0.31.1
-	}
-else
-	function build_wheel_cmd {
-		local cmd=${1:-pip_wheel_cmd}
-		local repo_dir=${2:-$REPO_DIR}
-		[ -z "$repo_dir" ] && echo "repo_dir not defined" && exit 1
-		local wheelhouse=$(abspath ${WHEEL_SDIR:-wheelhouse})
-		start_spinner
-		if [ -n "$(is_function "pre_build")" ]; then pre_build; fi
-		stop_spinner
-		if [ -n "$BUILD_DEPENDS" ]; then
-			pip install $(pip_opts) $BUILD_DEPENDS
-		fi
-		/opt/python/cp36-cp36m/bin/pip3 install wheel==0.31.1
-		(cd $repo_dir && $cmd $wheelhouse)
-		pip show wheel
-		repair_wheelhouse $wheelhouse
-	}	
-fi
