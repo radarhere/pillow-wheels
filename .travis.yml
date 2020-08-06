@@ -30,4 +30,4 @@ jobs:
 install:
     - HOMEBREW_NO_AUTO_UPDATE=1 brew install python3
     - sudo -H python3 -m pip install --upgrade pip
-    - sudo -H python3 -m pip install ./pillow_custom
+    - sudo -H python3 -m pip install https://github.com/radarhere/Pillow/archive/zlib.zip
