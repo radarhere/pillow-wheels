@@ -30,5 +30,4 @@ jobs:
 install:
     - HOMEBREW_NO_AUTO_UPDATE=1 brew install python3
     - sudo -H python3 -m pip install --upgrade pip
-    - all=":all:"
-    - sudo -H python3 -m pip install --upgrade Pillow --no-binary $all
+    - sudo -H python3 -m pip install ./pillow_custom
