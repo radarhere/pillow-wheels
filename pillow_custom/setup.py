@@ -480,6 +480,9 @@ class pil_build_ext(build_ext):
                 _add_directory(library_dirs, os.path.join(prefix, "lib"))
                 _add_directory(include_dirs, os.path.join(prefix, "include"))
                 ft_prefix = os.path.join(prefix, "opt", "freetype")
+                zlib_prefix = os.path.join(prefix, "opt", "zlib")
+                if zlib_prefix and os.path.isdir(zlib_prefix):
+                    _add_directory(include_dirs, os.path.join(zlib_prefix, "include"))
 
             if ft_prefix and os.path.isdir(ft_prefix):
                 # freetype might not be linked into Homebrew's prefix
