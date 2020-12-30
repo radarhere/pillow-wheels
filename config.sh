@@ -18,9 +18,16 @@ BZIP2_VERSION=1.0.8
 LIBXCB_VERSION=1.14
 
 function build_libjpeg_turbo {
+    echo "torch0"
     local cmake=$(get_modern_cmake)
+    cmake --version
+    
+    echo "torch1"
+    curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+
     fetch_unpack https://download.sourceforge.net/libjpeg-turbo/libjpeg-turbo-${JPEGTURBO_VERSION}.tar.gz
-    echo "torch"
+    echo "torch2"
+    brew info cmake
     (cd libjpeg-turbo-${JPEGTURBO_VERSION} \
         && $cmake -G"Unix Makefiles" . \
         && make install)
@@ -31,26 +38,13 @@ function pre_build {
     # Runs in the root directory of this repository.
     curl -fsSL -o pillow-depends-master.zip https://github.com/python-pillow/pillow-depends/archive/master.zip
     untar pillow-depends-master.zip
-    if [ -n "$IS_OSX" ]; then
-        # Update to latest zlib for OS X build
-        build_new_zlib
-    fi
-
+    
     if [ -n "$IS_OSX" ]; then
         ORIGINAL_BUILD_PREFIX=$BUILD_PREFIX
         ORIGINAL_PKG_CONFIG_PATH=$PKG_CONFIG_PATH
         BUILD_PREFIX=`dirname $(dirname $(which python))`
         PKG_CONFIG_PATH="$BUILD_PREFIX/lib/pkgconfig"
     fi
-    build_simple xcb-proto 1.14.1 https://xcb.freedesktop.org/dist
-    if [ -n "$IS_OSX" ]; then
-        build_simple xproto 7.0.31 https://www.x.org/pub/individual/proto
-        build_simple libXau 1.0.9 https://www.x.org/pub/individual/lib
-        build_simple libpthread-stubs 0.4 https://xcb.freedesktop.org/dist
-    else
-        sed -i s/\${pc_sysrootdir\}// /usr/local/lib/pkgconfig/xcb-proto.pc
-    fi
-    build_simple libxcb $LIBXCB_VERSION https://xcb.freedesktop.org/dist
     if [ -n "$IS_OSX" ]; then
         BUILD_PREFIX=$ORIGINAL_BUILD_PREFIX
         PKG_CONFIG_PATH=$ORIGINAL_PKG_CONFIG_PATH
