@@ -7,7 +7,7 @@ ARCHIVE_SDIR=pillow-depends-master
 FREETYPE_VERSION=2.10.4
 LIBPNG_VERSION=1.6.37
 ZLIB_VERSION=1.2.11
-JPEG_VERSION=9d
+JPEGTURBO_VERSION=2.0.6
 OPENJPEG_VERSION=2.4.0
 XZ_VERSION=5.2.5
 TIFF_VERSION=4.2.0
@@ -47,12 +47,7 @@ function pre_build {
         PKG_CONFIG_PATH=$ORIGINAL_PKG_CONFIG_PATH
     fi
     
-    # Custom flags to include both multibuild and jpeg defaults
-    ORIGINAL_CFLAGS=$CFLAGS
-    CFLAGS="$CFLAGS -g -O2"
-    build_jpeg
-    CFLAGS=$ORIGINAL_CFLAGS
-
+    build_simple libjpeg-turbo $JPEGTURBO_VERSION https://download.sourceforge.net/libjpeg-turbo
     build_tiff
     build_libpng
     build_lcms2
