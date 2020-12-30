@@ -18,19 +18,10 @@ BZIP2_VERSION=1.0.8
 LIBXCB_VERSION=1.14
 
 function build_libjpeg_turbo {
-    echo "torch0"
+    echo "torch"
     local cmake=$(get_modern_cmake)
+    find / -iname cmake
     cmake --version
-    
-    echo "torch1"
-    curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
-
-    fetch_unpack https://download.sourceforge.net/libjpeg-turbo/libjpeg-turbo-${JPEGTURBO_VERSION}.tar.gz
-    echo "torch2"
-    brew info cmake
-    (cd libjpeg-turbo-${JPEGTURBO_VERSION} \
-        && $cmake -G"Unix Makefiles" . \
-        && make install)
 }
 
 function pre_build {
