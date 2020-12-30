@@ -17,6 +17,15 @@ LIBWEBP_VERSION=1.1.0
 BZIP2_VERSION=1.0.8
 LIBXCB_VERSION=1.14
 
+function build_libjpeg_turbo {
+    local cmake=$(get_modern_cmake)
+    fetch_unpack https://download.sourceforge.net/libjpeg-turbo/libjpeg-turbo-${JPEGTURBO_VERSION}.tar.gz
+    echo "torch"
+    (cd libjpeg-turbo-${JPEGTURBO_VERSION} \
+        && $cmake -G"Unix Makefiles" . \
+        && make install)
+}
+
 function pre_build {
     # Any stuff that you need to do before you start building the wheels
     # Runs in the root directory of this repository.
@@ -47,7 +56,7 @@ function pre_build {
         PKG_CONFIG_PATH=$ORIGINAL_PKG_CONFIG_PATH
     fi
     
-    build_simple libjpeg-turbo $JPEGTURBO_VERSION https://download.sourceforge.net/libjpeg-turbo
+    build_libjpeg_turbo
     build_tiff
     build_libpng
     build_lcms2
