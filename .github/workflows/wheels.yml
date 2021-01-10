@@ -25,7 +25,7 @@ jobs:
             platform: "i686"
         include:
           - os: "macos-latest"
-            os-name: "osx"
+            os-name: "macos"
           - os: "ubuntu-16.04"
             os-name: "xenial"
     env:
@@ -66,7 +66,7 @@ jobs:
             platform: "i686"
         include:
           - os: "macos-latest"
-            os-name: "osx"
+            os-name: "macos"
           - os: "ubuntu-16.04"
             os-name: "xenial"
     env:
