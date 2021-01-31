@@ -104,15 +104,15 @@ function run_tests {
     fi
     echo "torch"
     echo $MB_PYTHON_VERSION
-    echo $PLAT
+    echo $(uname -a)
     if [[ "$MB_PYTHON_VERSION" == pypy3.7-* ]]; then
     	echo "pypy"
     fi
-    if [[ "$PLAT" == "i686" ]]; then
+    if [[ $(uname -a) == "i686" ]]; then
     	echo "i686"
     fi
     echo "done"
-    if [[ "$MB_PYTHON_VERSION" == pypy3.7-* ]] && [[ "$PLAT" == "i686" ]]; then
+    if [[ "$MB_PYTHON_VERSION" == pypy3.7-* ]] && [[ $(uname -a) == "i686" ]]; then
 	    python3 -m pip install numpy==1.19.5
     else
 	    python3 -m pip install numpy
