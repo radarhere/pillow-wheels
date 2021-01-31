@@ -102,6 +102,7 @@ function run_tests {
         brew install openblas
         echo -e "[openblas]\nlibraries = openblas\nlibrary_dirs = /usr/local/opt/openblas/lib" >> ~/.numpy-site.cfg
     fi
+    python3 -m pip install --upgrade pip
     python3 -m pip install numpy
 
     mv ../pillow-depends-master/test_images/* ../Pillow/Tests/images
