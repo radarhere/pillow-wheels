@@ -103,7 +103,7 @@ function run_tests {
         echo -e "[openblas]\nlibraries = openblas\nlibrary_dirs = /usr/local/opt/openblas/lib" >> ~/.numpy-site.cfg
     fi
     python3 -m pip install --upgrade pip
-    python3 -m pip install numpy
+    python3 -m pip install numpy==1.19.5
 
     mv ../pillow-depends-master/test_images/* ../Pillow/Tests/images
 
