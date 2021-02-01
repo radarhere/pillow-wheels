@@ -65,7 +65,7 @@ EXP_FEATURES="transp_webp webp_anim webp_mux"
 function run_tests {
     local ret=0
     if [[ "$MB_PYTHON_VERSION" == pypy3.7-* ]] && [[ $(uname -m) == "i686" ]]; then
-        python3 -m pip install numpy --disable-optimization
+        python3 -m pip install numpy --build-option="--disable-optimization"
     else
         python3 -m pip install numpy
     fi
