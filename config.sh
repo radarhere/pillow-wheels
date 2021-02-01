@@ -26,28 +26,6 @@ function pre_build {
         # Update to latest zlib for macOS build
         build_new_zlib
     fi
-
-    if [ -n "$IS_MACOS" ]; then
-        ORIGINAL_BUILD_PREFIX=$BUILD_PREFIX
-        ORIGINAL_PKG_CONFIG_PATH=$PKG_CONFIG_PATH
-        BUILD_PREFIX=`dirname $(dirname $(which python))`
-        PKG_CONFIG_PATH="$BUILD_PREFIX/lib/pkgconfig"
-    fi
-    if [[ $MACOSX_DEPLOYMENT_TARGET != "11.0" ]]; then
-		build_simple xcb-proto 1.14.1 https://xcb.freedesktop.org/dist
-		if [ -n "$IS_MACOS" ]; then
-			build_simple xproto 7.0.31 https://www.x.org/pub/individual/proto
-			build_simple libXau 1.0.9 https://www.x.org/pub/individual/lib
-			build_simple libpthread-stubs 0.4 https://xcb.freedesktop.org/dist
-		else
-			sed -i s/\${pc_sysrootdir\}// /usr/local/lib/pkgconfig/xcb-proto.pc
-		fi
-		build_simple libxcb $LIBXCB_VERSION https://xcb.freedesktop.org/dist
-    fi
-    if [ -n "$IS_MACOS" ]; then
-        BUILD_PREFIX=$ORIGINAL_BUILD_PREFIX
-        PKG_CONFIG_PATH=$ORIGINAL_PKG_CONFIG_PATH
-    fi
     
     # Custom flags to include both multibuild and jpeg defaults
     ORIGINAL_CFLAGS=$CFLAGS
@@ -58,13 +36,6 @@ function pre_build {
     build_tiff
     build_libpng
     build_lcms2
-    if [[ $MACOSX_DEPLOYMENT_TARGET != "11.0" ]]; then
-	    build_openjpeg
-    fi
-
-    CFLAGS="$CFLAGS -O3 -DNDEBUG"
-    build_libwebp
-    CFLAGS=$ORIGINAL_CFLAGS
 
     if [ -n "$IS_MACOS" ]; then
         # Custom freetype build
@@ -87,47 +58,16 @@ function run_tests_in_repo {
 }
 
 EXP_CODECS="jpg"
-if [[ $MACOSX_DEPLOYMENT_TARGET != "11.0" ]]; then
-    EXP_CODECS="$EXP_CODECS jpg_2000"
-fi
 EXP_CODECS="$EXP_CODECS libtiff zlib"
-EXP_MODULES="freetype2 littlecms2 pil tkinter webp"
+EXP_MODULES="freetype2 littlecms2 pil tkinter"
 EXP_FEATURES="transp_webp webp_anim webp_mux"
-if [[ $MACOSX_DEPLOYMENT_TARGET != "11.0" ]]; then
-    EXP_FEATURES="$EXP_FEATURES xcb"
-fi
 
 function run_tests {
-    if [ -n "$IS_MACOS" ]; then
-        brew install openblas
-        echo -e "[openblas]\nlibraries = openblas\nlibrary_dirs = /usr/local/opt/openblas/lib" >> ~/.numpy-site.cfg
-    fi
+    local ret=0
     if [[ "$MB_PYTHON_VERSION" == pypy3.7-* ]] && [[ $(uname -m) == "i686" ]]; then
-        python3 -m pip install numpy==1.19.5
+        python3 -m pip install numpy
     else
         python3 -m pip install numpy
-    fi
-
-    mv ../pillow-depends-master/test_images/* ../Pillow/Tests/images
-
-    # Runs tests on installed distribution from an empty directory
-    (cd ../Pillow && run_tests_in_repo)
-    # Test against expected codecs, modules and features
-    local ret=0
-    local codecs=$(python3 -c 'from PIL.features import *; print(" ".join(sorted(get_supported_codecs())))')
-    if [ "$codecs" != "$EXP_CODECS" ]; then
-        echo "Codecs should be: '$EXP_CODECS'; but are '$codecs'"
-        ret=1
-    fi
-    local modules=$(python3 -c 'from PIL.features import *; print(" ".join(sorted(get_supported_modules())))')
-    if [ "$modules" != "$EXP_MODULES" ]; then
-        echo "Modules should be: '$EXP_MODULES'; but are '$modules'"
-        ret=1
-    fi
-    local features=$(python3 -c 'from PIL.features import *; print(" ".join(sorted(get_supported_features())))')
-    if [ "$features" != "$EXP_FEATURES" ]; then
-        echo "Features should be: '$EXP_FEATURES'; but are '$features'"
-        ret=1
     fi
     return $ret
 }
