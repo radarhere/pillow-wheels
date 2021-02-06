@@ -475,7 +475,11 @@ function install_pypy {
     # since prefix is pypy3.6v7.2 or pypy2.7v7.2, grab the 4th (0-index) letter
     local major=${prefix:4:1}
     # get the pypy version 7.2.0
+    echo "torch"
+    echo $version
     local py_version=$(fill_pypy_ver $(echo $version | cut -f2 -d-))
+    echo "torch2"
+    echo $py_version
 
     local py_build=$prefix$py_version-$suffix
     local py_zip=$py_build.tar.bz2
