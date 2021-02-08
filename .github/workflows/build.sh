@@ -1,34 +1,20 @@
+#!/bin/bash
 
-if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-  # these cause a conflict with built webp and libtiff,
-  # curl from brew requires zstd, use system curl
-  brew remove --ignore-dependencies webp zstd xz libtiff curl
-fi
-
-if [[ "$MB_PYTHON_VERSION" == pypy3* ]]; then
-  if [[ "$TRAVIS_OS_NAME" != "macos-latest" ]]; then
-    MB_ML_VER="2010"
-    DOCKER_TEST_IMAGE="multibuild/xenial_$PLAT"
-  else
-    MB_PYTHON_OSX_VER="10.9"
-  fi
-fi
-
-echo "::group::Install a virtualenv"
-  source multibuild/common_utils.sh
-  source multibuild/travis_steps.sh
-  python3 -m pip install virtualenv
-  before_install
-echo "::endgroup::"
-
-echo "::group::Build wheel"
-  clean_code $REPO_DIR $BUILD_COMMIT
-  build_wheel $REPO_DIR $PLAT
-  ls -l "${GITHUB_WORKSPACE}/${WHEEL_SDIR}/"
-echo "::endgroup::"
-
-if [[ $MACOSX_DEPLOYMENT_TARGET != "11.0" ]]; then
-  echo "::group::Test wheel"
-    install_run $PLAT
-  echo "::endgroup::"
-fi
+ls /Applications | grep Xcode
+echo "Before"
+xcode-select -p || true
+sudo xcode-select -switch /Applications/Xcode_11.7.app || true
+echo "Mid"
+xcode-select -p || true
+echo "mid_sdk"
+xcrun -show-sdk-version
+x=$(ls /Applications | grep Xcode[_0-9\.]*\.app | sort -V | tail -n 1)
+echo "sed"
+ls /Applications | grep Xcode[_0-9\.]*\.app | sort -V | tail -n 1 | sed s/Xcode_([0-9]+)\..*/\1/
+echo "x"
+echo $x
+sudo xcode-select -switch /Applications/$x || true
+echo "After"
+xcode-select -p || true
+echo "after_sdk"
+xcrun -show-sdk-version
