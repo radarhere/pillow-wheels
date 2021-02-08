@@ -58,9 +58,7 @@ function pre_build {
     build_tiff
     build_libpng
     build_lcms2
-    if [[ $MACOSX_DEPLOYMENT_TARGET != "11.0" ]]; then
-	    build_openjpeg
-    fi
+	build_openjpeg
 
     CFLAGS="$CFLAGS -O3 -DNDEBUG"
     build_libwebp
