@@ -42,6 +42,9 @@ jobs:
           sudo xcode-select -switch /Applications/Xcode_11.4.app || true
           echo "Mid"
           xcode-select -p || true
-          sudo xcode-select -switch /Applications/Xcode_12.*.app || true
+          x=$(ls /Applications | grep Xcode[_0-9\.]*\.app | sort -V | tail -n 1)
+          echo "x"
+          echo $x
+          sudo xcode-select -switch /Applications/$x || true
           echo "After"
           xcode-select -p || true
