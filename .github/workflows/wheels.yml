@@ -51,6 +51,8 @@ jobs:
           echo "mid_sdk"
           xcrun -show-sdk-version
           x=$(ls /Applications | grep Xcode[_0-9\.]*\.app | sort -V | tail -n 1)
+          echo "sed"
+          ls /Applications | grep Xcode[_0-9\.]*\.app | sort -V | tail -n 1 | sed s/Xcode_([0-9]+)\..*/\1/
           echo "x"
           echo $x
           sudo xcode-select -switch /Applications/$x || true
