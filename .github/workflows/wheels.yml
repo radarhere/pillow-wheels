@@ -27,6 +27,12 @@ jobs:
             platform: "x86_64"
           - os: "macos-latest"
             platform: "i686"
+        include:
+          - os: "macos-11.0"
+            os-name: "osx"
+            platform: "arm64"
+            python: "3.9"
+            macos-target: "11.0"
     env:
       BUILD_COMMIT: HEAD
       PLAT: ${{ matrix.platform }}
@@ -39,12 +45,16 @@ jobs:
           ls /Applications | grep Xcode
           echo "Before"
           xcode-select -p || true
-          sudo xcode-select -switch /Applications/Xcode_11.4.app || true
+          sudo xcode-select -switch /Applications/Xcode_11.7.app || true
           echo "Mid"
           xcode-select -p || true
+          echo "mid_sdk"
+          xcrun -show-sdk-version
           x=$(ls /Applications | grep Xcode[_0-9\.]*\.app | sort -V | tail -n 1)
           echo "x"
           echo $x
           sudo xcode-select -switch /Applications/$x || true
           echo "After"
           xcode-select -p || true
+          echo "after_sdk"
+          xcrun -show-sdk-version
