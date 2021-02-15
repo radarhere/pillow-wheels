@@ -34,7 +34,6 @@ jobs:
       TRAVIS_OS_NAME: ${{ matrix.os-name }}
       MACOSX_DEPLOYMENT_TARGET: ${{ matrix.macos-target }}
       MB_ML_VER: "2010"
-      DOCKER_TEST_IMAGE: multibuild/xenial_{PLAT}
     steps:
       - uses: actions/checkout@v2
         with:
