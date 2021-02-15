@@ -493,9 +493,12 @@ function install_pypy {
     $PYTHON_EXE -mensurepip
     $PYTHON_EXE -mpip install --upgrade pip setuptools wheel
     if [ "$major" == "3" ] && [ ! -x "$py_build/bin/pip" ]; then
+    	echo "torch hit"
         ln $py_build/bin/pip3 $py_build/bin/pip
+    else
+    	echo "torch hit2"
     fi
-    PIP_CMD=pip
+    PIP_CMD=/io/pypy3.7-v7.3.3-linux32/bin/pip
 }
 
 function fill_pypy_ver {
