@@ -17,6 +17,7 @@ fi
 echo "::group::Install a virtualenv"
   source multibuild2/common_utils.sh
   source multibuild2/travis_steps.sh
+  if [ ! -o PIP_CMD ]; then PIP_CMD="$PYTHON_EXE -m pip"; fi
   python3 -m pip install virtualenv
   before_install
 echo "::endgroup::"

@@ -498,7 +498,7 @@ function install_pypy {
     else
     	echo "torch hit2"
     fi
-    PIP_CMD=/io/pypy3.7-v7.3.3-linux32/bin/pip
+    PIP_CMD=pip
 }
 
 function fill_pypy_ver {
