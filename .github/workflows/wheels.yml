@@ -34,6 +34,7 @@ jobs:
       TRAVIS_OS_NAME: ${{ matrix.os-name }}
       MACOSX_DEPLOYMENT_TARGET: ${{ matrix.macos-target }}
       MB_ML_VER: "2010"
+      DOCKER_TEST_IMAGE: "quay.io/pypa/manylinux2010_i686"
     steps:
       - uses: actions/checkout@v2
         with:
