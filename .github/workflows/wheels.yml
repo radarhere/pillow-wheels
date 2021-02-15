@@ -23,12 +23,18 @@ jobs:
         exclude:
           - os: "macos-latest"
             platform: "i686"
+          - os: "macos-latest"
+            platform: "x86_64"
+          - os: "ubuntu-16.04"
+            platform: "x86_64"
     env:
       BUILD_COMMIT: HEAD
       PLAT: ${{ matrix.platform }}
       MB_PYTHON_VERSION: ${{ matrix.python }}
       TRAVIS_OS_NAME: ${{ matrix.os-name }}
       MACOSX_DEPLOYMENT_TARGET: ${{ matrix.macos-target }}
+      MB_ML_VER: "2010"
+      DOCKER_TEST_IMAGE: multibuild/xenial_{PLAT}
     steps:
       - uses: actions/checkout@v2
         with:
