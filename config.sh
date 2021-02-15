@@ -55,25 +55,16 @@ function pre_build {
     build_jpeg
     CFLAGS=$ORIGINAL_CFLAGS
 
-    build_tiff
     if [ -n "$IS_MACOS" ]; then
         # Remove existing libpng
         rm /usr/local/lib/libpng*
     fi
     build_libpng
     build_lcms2
-    build_openjpeg
 
     CFLAGS="$CFLAGS -O3 -DNDEBUG"
     build_libwebp
     CFLAGS=$ORIGINAL_CFLAGS
-
-    if [ -n "$IS_MACOS" ]; then
-        # Custom freetype build
-        build_simple freetype $FREETYPE_VERSION https://download.savannah.gnu.org/releases/freetype tar.gz --with-harfbuzz=no --with-brotli=no
-    else
-        build_freetype
-    fi
 
     # Append licenses
     for filename in dependency_licenses/*; do
