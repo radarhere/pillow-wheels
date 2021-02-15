@@ -364,6 +364,7 @@ function install_wheel {
     #     MANYLINUX_URL (optional, default "") (via pip_opts function)
     local wheelhouse=$(abspath ${WHEEL_SDIR:-wheelhouse})
     check_pip
+    find / -iname pip
     if [ -n "$TEST_DEPENDS" ]; then
         while read TEST_DEPENDENCY; do
             $PIP_CMD install $(pip_opts) $@ $TEST_DEPENDENCY
@@ -494,7 +495,7 @@ function install_pypy {
     if [ "$major" == "3" ] && [ ! -x "$py_build/bin/pip" ]; then
         ln $py_build/bin/pip3 $py_build/bin/pip
     fi
-    PIP_CMD=$py_build/bin/pip
+    PIP_CMD=pip
 }
 
 function fill_pypy_ver {
