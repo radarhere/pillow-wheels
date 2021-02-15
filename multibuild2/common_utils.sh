@@ -365,6 +365,7 @@ function install_wheel {
     local wheelhouse=$(abspath ${WHEEL_SDIR:-wheelhouse})
     check_pip
     find / -iname pip
+    PIP_CMD="$PYTHON_EXE -m pip"
     if [ -n "$TEST_DEPENDS" ]; then
         while read TEST_DEPENDENCY; do
             $PIP_CMD install $(pip_opts) $@ $TEST_DEPENDENCY
