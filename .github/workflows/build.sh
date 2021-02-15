@@ -8,7 +8,7 @@ fi
 if [[ "$MB_PYTHON_VERSION" == pypy3* ]]; then
   if [[ "$TRAVIS_OS_NAME" != "macos-latest" ]]; then
     MB_ML_VER="2010"
-    DOCKER_TEST_IMAGE="quay.io/pypa/manylinux2010_i686"
+    DOCKER_TEST_IMAGE="quay.io/pypa/manylinux2010"
   else
     MB_PYTHON_OSX_VER="10.9"
   fi
