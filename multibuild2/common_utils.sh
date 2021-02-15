@@ -494,7 +494,7 @@ function install_pypy {
     if [ "$major" == "3" ] && [ ! -x "$py_build/bin/pip" ]; then
         ln $py_build/bin/pip3 $py_build/bin/pip
     fi
-    PIP_CMD=pip
+    PIP_CMD=$py_build/bin/pip
 }
 
 function fill_pypy_ver {
