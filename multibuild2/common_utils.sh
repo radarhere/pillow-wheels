@@ -385,6 +385,7 @@ function install_wheel {
 
 function install_run {
     # Depends on function `run_tests` defined in `config.sh`
+    echo "torch"
     install_wheel
     mkdir tmp_for_test
     (cd tmp_for_test && run_tests)

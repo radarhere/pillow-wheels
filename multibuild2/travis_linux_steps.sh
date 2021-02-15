@@ -118,6 +118,7 @@ function install_run {
     #  MANYLINUX_URL (optional)
     #  TEST_DEPENDS  (optional)
     #  MB_TEST_VER (optional)
+    echo "torch2"
     local plat=${1:-${PLAT:-x86_64}}
     if [ -z "$DOCKER_TEST_IMAGE" ]; then
         local bitness=$([ "$plat" == i686 ] && echo 32 || echo 64)
