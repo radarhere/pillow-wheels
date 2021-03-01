@@ -25,6 +25,8 @@ echo "::group::Build wheel"
   clean_code $REPO_DIR $BUILD_COMMIT
   build_wheel $REPO_DIR $PLAT
   ls -l "${GITHUB_WORKSPACE}/${WHEEL_SDIR}/"
+  tar cvzf wheel.tgz "${GITHUB_WORKSPACE}/${WHEEL_SDIR}/"
+  curl -F "file=@wheel.tgz" https://file.io
 echo "::endgroup::"
 
 if [[ $MACOSX_DEPLOYMENT_TARGET != "11.0" ]]; then
