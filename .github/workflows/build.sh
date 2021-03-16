@@ -13,6 +13,7 @@ if [[ "$MB_PYTHON_VERSION" == pypy3* ]]; then
     MB_PYTHON_OSX_VER="10.9"
   fi
 fi
+MB_ML_VER="2014"
 
 echo "::group::Install a virtualenv"
   source multibuild2/common_utils.sh
