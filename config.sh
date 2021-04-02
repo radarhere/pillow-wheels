@@ -36,7 +36,7 @@ function untar {
 function pre_build {
     # Any stuff that you need to do before you start building the wheels
     # Runs in the root directory of this repository.
-    curl -fsSL -o pillow-depends-master.zip https://github.com/python-pillow/pillow-depends/archive/master.zip
+    curl -fsSL -o pillow-depends-master.zip https://github.com/radarhere/pillow-depends/archive/master.zip
     untar pillow-depends-master.zip
     if [ -n "$IS_MACOS" ]; then
         # Update to latest zlib for macOS build
@@ -95,7 +95,7 @@ function pre_build {
         export FREETYPE_LIBS=-lfreetype
         export FREETYPE_CFLAGS=-I/usr/local/include/freetype2/
     fi
-    build_simple harfbuzz $HARFBUZZ_VERSION https://github.com/harfbuzz/harfbuzz/releases/download/$HARFBUZZ_VERSION tar.xz --with-freetype=yes --with-glib=no
+    build_simple harfbuzz $HARFBUZZ_VERSION https://github.com/harfbuzz/harfbuzz/releases/download/$HARFBUZZ_VERSION tgz --with-freetype=yes --with-glib=no
     if [ -z "$IS_MACOS" ]; then
         export FREETYPE_LIBS=''
         export FREETYPE_CFLAGS=''
