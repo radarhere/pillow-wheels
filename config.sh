@@ -109,6 +109,7 @@ function pre_build {
 }
 
 function pip_wheel_cmd {
+    echo "torch run"
     local abs_wheelhouse=$1
     if [ -z "$IS_MACOS" ]; then
         CFLAGS="$CFLAGS --std=c99"  # for Raqm
@@ -129,7 +130,7 @@ EXP_CODECS="jpg jpg_2000"
 EXP_CODECS="$EXP_CODECS libtiff zlib"
 EXP_MODULES="freetype2 littlecms2 pil tkinter webp"
 if [ -z "$IS_MACOS" ] && [[ "$MB_PYTHON_VERSION" != pypy3* ]]; then
-  EXP_FEATURES="fribidi harfbuzz raqm transp_webp webp_anim webp_mux"
+  EXP_FEATURES="transp_webp webp_anim webp_mux"
 else
   # can't find FriBiDi
   EXP_FEATURES="transp_webp webp_anim webp_mux"
