@@ -21,6 +21,8 @@ function repair_wheelhouse {
         else
             local tmpdir=$(mktemp -d -t)
             
+            echo "torch"
+            auditwheel --version
             auditwheel repair $whl -w $tmpdir/
             
             local built=$(find $tmpdir -name *.whl)
