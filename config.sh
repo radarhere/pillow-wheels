@@ -44,65 +44,18 @@ function pre_build {
     fi
 
     if [ -n "$IS_MACOS" ]; then
-        ORIGINAL_BUILD_PREFIX=$BUILD_PREFIX
-        ORIGINAL_PKG_CONFIG_PATH=$PKG_CONFIG_PATH
-        BUILD_PREFIX=`dirname $(dirname $(which python))`
-        PKG_CONFIG_PATH="$BUILD_PREFIX/lib/pkgconfig"
-    fi
-    if [[ $MACOSX_DEPLOYMENT_TARGET != "11.0" ]]; then
-		build_simple xcb-proto 1.14.1 https://xcb.freedesktop.org/dist
-		if [ -n "$IS_MACOS" ]; then
-			build_simple xproto 7.0.31 https://www.x.org/pub/individual/proto
-			build_simple libXau 1.0.9 https://www.x.org/pub/individual/lib
-			build_simple libpthread-stubs 0.4 https://xcb.freedesktop.org/dist
-		else
-			sed -i s/\${pc_sysrootdir\}// /usr/local/lib/pkgconfig/xcb-proto.pc
-		fi
-		build_simple libxcb $LIBXCB_VERSION https://xcb.freedesktop.org/dist
-    fi
-    if [ -n "$IS_MACOS" ]; then
-        BUILD_PREFIX=$ORIGINAL_BUILD_PREFIX
-        PKG_CONFIG_PATH=$ORIGINAL_PKG_CONFIG_PATH
-    fi
-    
-    # Custom flags to include both multibuild and jpeg defaults
-    ORIGINAL_CFLAGS=$CFLAGS
-    CFLAGS="$CFLAGS -g -O2"
-    build_jpeg
-    CFLAGS=$ORIGINAL_CFLAGS
-
-    if [[ -n "$IS_MACOS" && $MACOSX_DEPLOYMENT_TARGET == "11.0" ]]; then
-        TIFF_VERSION=4.2.0
-    fi
-    build_tiff
-    if [ -n "$IS_MACOS" ]; then
-        # Remove existing libpng
-        rm /usr/local/lib/libpng*
-    fi
-    build_libpng
-    build_lcms2
-    build_openjpeg
-
-    CFLAGS="$CFLAGS -O3 -DNDEBUG"
-    build_libwebp
-    CFLAGS=$ORIGINAL_CFLAGS
-
-    if [ -n "$IS_MACOS" ]; then
         # Custom freetype build
         build_simple freetype $FREETYPE_VERSION https://download.savannah.gnu.org/releases/freetype tar.gz --with-harfbuzz=no --with-brotli=no
     else
         build_freetype
     fi
 
-    if [ -z "$IS_MACOS" ]; then
-        export FREETYPE_LIBS=-lfreetype
-        export FREETYPE_CFLAGS=-I/usr/local/include/freetype2/
-    fi
-    build_simple harfbuzz $HARFBUZZ_VERSION https://github.com/harfbuzz/harfbuzz/releases/download/$HARFBUZZ_VERSION tar.xz --with-freetype=yes --with-glib=no
-    if [ -z "$IS_MACOS" ]; then
-        export FREETYPE_LIBS=''
-        export FREETYPE_CFLAGS=''
-    fi
+    # Custom flags to include both multibuild and jpeg defaults
+    ORIGINAL_CFLAGS=$CFLAGS
+    CFLAGS="$CFLAGS -g -O2"
+    build_jpeg
+    CFLAGS=$ORIGINAL_CFLAGS
+    build_openjpeg
 
     # Append licenses
     for filename in dependency_licenses/*; do
@@ -117,8 +70,7 @@ function pip_wheel_cmd {
         CFLAGS="$CFLAGS --std=c99"  # for Raqm
     fi
     pip wheel $(pip_opts) \
-        --global-option build_ext --global-option --enable-raqm \
-        --global-option --vendor-raqm --global-option --vendor-fribidi \
+        --global-option build_ext \
         -w $abs_wheelhouse --no-deps .
 }
 
@@ -147,7 +99,7 @@ function run_tests {
         echo -e "[openblas]\nlibraries = openblas\nlibrary_dirs = /usr/local/opt/openblas/lib" >> ~/.numpy-site.cfg
     fi
     if [[ "$MB_PYTHON_VERSION" == pypy3.7-* ]] && [[ $(uname -m) == "i686" ]]; then
-        python3 -m pip install numpy==1.19.5
+        python3 -m pip install --no-use-pep517 numpy
     else
         python3 -m pip install numpy
     fi
@@ -158,20 +110,5 @@ function run_tests {
     (cd ../Pillow && run_tests_in_repo)
     # Test against expected codecs, modules and features
     local ret=0
-    local codecs=$(python3 -c 'from PIL.features import *; print(" ".join(sorted(get_supported_codecs())))')
-    if [ "$codecs" != "$EXP_CODECS" ]; then
-        echo "Codecs should be: '$EXP_CODECS'; but are '$codecs'"
-        ret=1
-    fi
-    local modules=$(python3 -c 'from PIL.features import *; print(" ".join(sorted(get_supported_modules())))')
-    if [ "$modules" != "$EXP_MODULES" ]; then
-        echo "Modules should be: '$EXP_MODULES'; but are '$modules'"
-        ret=1
-    fi
-    local features=$(python3 -c 'from PIL.features import *; print(" ".join(sorted(get_supported_features())))')
-    if [ "$features" != "$EXP_FEATURES" ]; then
-        echo "Features should be: '$EXP_FEATURES'; but are '$features'"
-        ret=1
-    fi
     return $ret
 }
