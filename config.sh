@@ -113,6 +113,9 @@ function pre_build {
       echo -e "\n\n----\n\n$(basename $filename | cut -f 1 -d '.')\n" | cat >> Pillow/LICENSE
       cat $filename >> Pillow/LICENSE
     done
+
+    echo "torch"
+    xz --version
 }
 
 function pip_wheel_cmd {
